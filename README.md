@@ -39,3 +39,4 @@ csv 파일에 적혀있는 종속된 작업과 작업 기간을 통해 Earliest 
 터미널에서 .dot파일을 .png 파일로 저장합니다.
 
 ## 결과 사진
+![graph](https://github.com/jihyeok0924/Critical-Path-Method/assets/144129774/526344db-5666-44ba-a780-80bd9e39cc1b)
