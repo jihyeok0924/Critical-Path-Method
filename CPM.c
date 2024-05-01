@@ -78,28 +78,6 @@ void printGraphviz() {
     }
 }
 
-int main ()
-{
-    char Key;
-    do {
-        for(int i = 0; i < numActivities; i++) {
-            List[i] = NULL;
-        }
-        GetActivities();
-        WalkListAhead();
-        WalkListAback();
-        CriticalPath();
-        printGraphviz();
-        printf(" again? y\\n: ");
-        scanf(" %c", &Key);
-    } while(Key == 'y' || Key == 'Y');
-
-    // Free the memory allocated for the activities
-    for(int i = 0; i < numActivities; i++) {
-        free(List[i]);
-    }
-}
-
 void GetActivities()
 {
     FILE *file = fopen("activities.csv", "r");
@@ -227,4 +205,26 @@ void CriticalPath()
     printf("\n\n\tTotal duration: \t%d", critical);
     printf("\n\tTotal cost : \t%d", total_cost);
     printf("\n\n");
+}
+
+int main ()
+{
+    char Key;
+    do {
+        for(int i = 0; i < numActivities; i++) {
+            List[i] = NULL;
+        }
+        GetActivities();
+        WalkListAhead();
+        WalkListAback();
+        CriticalPath();
+        printGraphviz();
+        printf(" again? y\\n: ");
+        scanf(" %c", &Key);
+    } while(Key == 'y' || Key == 'Y');
+
+    // Free the memory allocated for the activities
+    for(int i = 0; i < numActivities; i++) {
+        free(List[i]);
+    }
 }
