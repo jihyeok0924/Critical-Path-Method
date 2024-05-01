@@ -13,10 +13,10 @@ typedef struct Activity
     int Cost;
     struct Activity *Successors[100];
     struct Activity *Predecessors[100];
-}activity;
+}activity; //활동 분석에 필요한 내용들로 구조체 선언
 
 int numActivities,critical;
-activity *List[100],*check,*check2, *activityInstance;
+activity *List[100],*check,*check2, *activityInstance; //전역 변수 선언
 
 void GetActivities();
 void WalkListAhead();
@@ -34,7 +34,7 @@ void CheckActivity(activity *act, int i)
         }
     }
     check = NULL;
-}
+} //활동이 리스트에 있는지 확인
 
 
 int GetIndex(activity *act, int i)
@@ -47,36 +47,14 @@ int GetIndex(activity *act, int i)
         }
     }
     return -1;
-}
+} //활동의 인덱스를 반환
 
 int SetSuccessors(activity *act)
 {
     int i;
     for(i = 0; act->Successors[i] != NULL; i++);
     return i;
-}
-
-void printGraphviz() {
-    FILE* file = fopen("graph.dot", "w");
-    if (file != NULL) {
-        fprintf(file, "digraph G {\n");
-        for(int i = 0; i < numActivities; i++) {
-            activity *act = List[i];
-            if ((act->Eet - act->Let) == 0 && (act->Est - act->Lst) == 0) {
-                fprintf(file, "    \"%s\" [label=\"ID: %s\\nDuration: %.2f\\nCost: %d\\nEst: %d\\nLet: %d\", fontcolor=red, fontsize=16];\n", act->Id, act->Id, act->duration, act->Cost, act->Est, act->Let);
-            } else {
-                fprintf(file, "    \"%s\" [label=\"ID: %s\\nDuration: %.2f\\nCost: %d\\nEst: %d\\nLet: %d\"];\n", act->Id, act->Id, act->duration, act->Cost, act->Est, act->Let);
-            }
-            for(int j = 0; act->Successors[j] != NULL; j++) {
-                fprintf(file, "    \"%s\" -> \"%s\";\n", act->Id, act->Successors[j]->Id);
-            }
-        }
-        fprintf(file, "}\n");
-        fclose(file);
-    } else {
-        printf("Failed to open file.\n");
-    }
-}
+} //후행 활동 배열의 크기를 반환
 
 void GetActivities()
 {
@@ -128,7 +106,7 @@ void GetActivities()
     }
 
     fclose(file);
-}
+} //csv 파일에서 활동의 ID, 소요 시간, 비용 및 선행 활동을 가져와 구조체에 저장
 
 void WalkListAhead()
 {
@@ -148,7 +126,7 @@ void WalkListAhead()
             List[i]->Eet = List[i]->Est + List[i]->duration;
         }
     }
-}
+} //전방 계산을 수행하여 활동의 ES 및 EF를 계산
 
 void WalkListAback()
 {
@@ -177,7 +155,7 @@ void WalkListAback()
          List[i]->Lst=max-List[i]->duration;
       }
    }
-}
+} //후방 계산을 수행하여 활동의 LS 및 LF를 계산
 
 void CriticalPath()
 {
@@ -205,7 +183,29 @@ void CriticalPath()
     printf("\n\n\tTotal duration: \t%d", critical);
     printf("\n\tTotal cost : \t%d", total_cost);
     printf("\n\n");
-}
+} //임계 경로를 계산하고 출력
+
+void printGraphviz() {
+    FILE* file = fopen("graph.dot", "w");
+    if (file != NULL) {
+        fprintf(file, "digraph G {\n");
+        for(int i = 0; i < numActivities; i++) {
+            activity *act = List[i];
+            if ((act->Eet - act->Let) == 0 && (act->Est - act->Lst) == 0) {
+                fprintf(file, "    \"%s\" [label=\"ID: %s\\nDuration: %.2f\\nCost: %d\\nEst: %d\\nLet: %d\", fontcolor=red, fontsize=16];\n", act->Id, act->Id, act->duration, act->Cost, act->Est, act->Let);
+            } else {
+                fprintf(file, "    \"%s\" [label=\"ID: %s\\nDuration: %.2f\\nCost: %d\\nEst: %d\\nLet: %d\"];\n", act->Id, act->Id, act->duration, act->Cost, act->Est, act->Let);
+            }
+            for(int j = 0; act->Successors[j] != NULL; j++) {
+                fprintf(file, "    \"%s\" -> \"%s\";\n", act->Id, act->Successors[j]->Id);
+            }
+        }
+        fprintf(file, "}\n");
+        fclose(file);
+    } else {
+        printf("Failed to open file.\n");
+    }
+} //graphviz를 이용해 결과를 dot 파일로 생성
 
 int main ()
 {
@@ -223,8 +223,7 @@ int main ()
         scanf(" %c", &Key);
     } while(Key == 'y' || Key == 'Y');
 
-    // Free the memory allocated for the activities
     for(int i = 0; i < numActivities; i++) {
         free(List[i]);
     }
-}
+} //함수들을 실행하고 프로그램이 종료될 때 list에 할당된 메모리를 해제
